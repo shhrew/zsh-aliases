@@ -1,7 +1,9 @@
+source $(dirname "$0")/env.zsh
+
 # Misc
 ips() {
   if [ -z "$1" ]; then
-      ip a show scope global | awk '/^[0-9]+:/ { sub(/:/,"",$2); iface=$2 } /^[[:space:]]*inet / { split($2, a, "/"); print "[\033[96m" iface"\033[0m] "a[1] }'
+      ip a show scope global | awk '/^[0-9]+:/ { sub(/:/,"",$2); iface=$2 } /^[[:space:]]*inet / { split($2, a, "/"); print "[\033[92m" iface"\033[0m] "a[1] }'
       return
   fi
 
@@ -16,15 +18,17 @@ ips() {
       # Check if IP_ADDRESS is not empty
       if [ -n "$IP_ADDRESS" ]; then
           echo -n "$IP_ADDRESS" | xclip -sel clip
-          print "[\033[96m"$ADAPTER"\033[0m] $IP_ADDRESS copied to clipboard!"
+          print "[\033[92m"$ADAPTER"\033[0m] $IP_ADDRESS copied to clipboard!"
       else
-          print "[\033[96m"$ADAPTER"\033[0m] No IP address found for adapter"
+          print "[\033[91m"$ADAPTER"\033[0m] No IP address found for adapter"
       fi
+  else
+      print "[\033[91m"$ADAPTER"\033[0m] No adapter found with that name"
   fi
 }
 
 lspwd() {
-  echo -e "[\e[96m`pwd`\e[0m]\e[34m" && ls && echo -en "\e[0m"
+  echo -e "[\e[92m`pwd`\e[0m]\e[34m" && ls && echo -en "\e[0m"
 }
 
 mkdircd() {
@@ -41,10 +45,10 @@ addhost() {
     hostname="$2"
     if grep -q "^$ip" /etc/hosts; then
       sudo sed -i "/^$ip/s/$/ $hostname/" /etc/hosts
-      print "[\033[96m"+"\033[0m] Appended $hostname to existing entry for $ip in /etc/hosts"
+      print "[\033[92m"+"\033[0m] Appended $hostname to existing entry for $ip in /etc/hosts"
     else
       echo "$ip $hostname" | sudo tee -a /etc/hosts > /dev/null
-      print "[\033[96m"+"\033[0m] Added new entry: $ip $hostname to /etc/hosts"
+      print "[\033[92m"+"\033[0m] Added new entry: $ip $hostname to /etc/hosts"
     fi
 
     grep "^$ip" /etc/hosts
