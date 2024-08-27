@@ -54,6 +54,13 @@ addhost() {
     grep "^$ip" /etc/hosts
 }
 
+cleanup() {
+  sudo find /var/log -type f -regextype posix-extended -regex '.*\.[0-9]+(\.[^/]+)?$' -delete
+  for i in $(sudo find /var/log -type f); do sudo sh -c "cat /dev/null > $i"; done
+  echo -n > ~/.zsh_history
+  echo -n > ~/.bash_history
+}
+
 alias www="lspwd && sudo python3 -m http.server 80"
 alias stty_fix="stty raw -echo; fg; reset"
 alias stty_conf="stty -a | sed 's/;//g' | head -n 1 | sed 's/.*baud /stty /g;s/line.*//g' | xclip -sel clip"
