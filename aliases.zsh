@@ -57,8 +57,7 @@ addhost() {
 cleanup() {
   sudo find /var/log -type f -regextype posix-extended -regex '.*\.[0-9]+(\.[^/]+)?$' -delete
   for i in $(sudo find /var/log -type f); do sudo sh -c "cat /dev/null > $i"; done
-  echo -n > ~/.zsh_history
-  echo -n > ~/.bash_history
+  local HISTFILE=0
 }
 
 alias www="lspwd && sudo python3 -m http.server 80"
