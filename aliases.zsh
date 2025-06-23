@@ -61,6 +61,11 @@ cleanup() {
   for i in $(sudo find /var/log -type f); do sudo sh -c "cat /dev/null > $i"; done
 }
 
+rcvfile() {
+  print "[\033[92m"+"\033[0m] Listening on $1, writing output into $2..."
+  nc -l -p "$1" -q 1 > "$2"
+}
+
 alias www="lspwd && sudo python3 -m http.server 80"
 alias stty_fix="stty raw -echo; fg; reset"
 alias stty_conf="stty -a | sed 's/;//g' | head -n 1 | sed 's/.*baud /stty /g;s/line.*//g' | xclip -sel clip"
