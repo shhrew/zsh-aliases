@@ -1,5 +1,6 @@
 source $(dirname "$0")/env.zsh
 source $(dirname "$0")/fuzz.zsh
+source $(dirname "$0")/vars.zsh
 
 # Misc
 ips() {
