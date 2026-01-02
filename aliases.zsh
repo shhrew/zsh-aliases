@@ -68,6 +68,41 @@ rcvfile() {
   nc -l -p "$1" -q 1 > "$2"
 }
 
-alias www="lspwd && sudo python3 -m http.server 80"
+mkcd() {
+  mkdir $1
+  cd $1
+}
+
+settime() {
+  timedatectl set-ntp 0
+  timedatectl set-time "$(date -d "$(curl -s -I $1 | grep -i '^Date:' | cut -d' ' -f2-)" '+%Y-%m-%d %H:%M:%S')"
+}
+
+resettime() {
+  timedatectl set-ntp 1
+}
+
+setkerb() {
+  export KRB5CCNAME="$1"
+  viewkerb
+}
+
+viewkerb() {
+  print "[\033[92m"+"\033[0m] KRB5CCNAME=$KRB5CCNAME"
+}
+
+resetkerb() {
+  unset KRB5CCNAME
+  print "[\033[92m"+"\033[0m] KRB5CCNAME has been unset"
+}
+
+www() {
+  if [ -n "$1" ]; then
+    ips "$1"
+  fi
+
+  lspwd && sudo python3 -m http.server 80
+}
+
 alias stty_fix="stty raw -echo; fg; reset"
 alias stty_conf="stty -a | sed 's/;//g' | head -n 1 | sed 's/.*baud /stty /g;s/line.*//g' | xclip -sel clip"
